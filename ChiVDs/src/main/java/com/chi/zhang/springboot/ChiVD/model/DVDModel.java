@@ -5,14 +5,20 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -27,8 +33,12 @@ public class DVDModel implements Serializable{
 	
 	@NotBlank
 	private String film_name;
-		
-	private Long rented_by_user;
+	
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "rented_by_user", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonIgnore	
+	private UserModel rented_by_user;
 	
 	private Date rental_date;
 
@@ -48,14 +58,14 @@ public class DVDModel implements Serializable{
 		this.film_name = film_name;
 	}
 	
-	public Long getRented_by_user() {
+	public UserModel getRented_by_user() {
 		return rented_by_user;
 	}
 
-	public void setRented_by_user(Long rented_by_user) {
+	public void setRented_by_user(UserModel rented_by_user) {
 		this.rented_by_user = rented_by_user;
 	}
-	
+
 	public Date getRental_date() {
 		return rental_date;
 	}

@@ -38,7 +38,7 @@ public class OrderController {
 		return personRepo.findById(personId).map(SpringBootDataModel -> {
 			order.setPerson(SpringBootDataModel);
 			return orderRepo.save(order);
-		}).orElseThrow(() -> new ResourceNotFoundException("OrderId","id", order));
+		}).orElseThrow(() -> new ResourceNotFoundException("PersonId","id", order));
 	}
 	
 	@PutMapping("/person/{personId}/order/{orderId}")

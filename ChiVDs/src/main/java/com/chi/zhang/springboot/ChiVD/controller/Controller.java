@@ -76,7 +76,7 @@ public class Controller {
 	
 	//create DVD
 	@PostMapping("/newdvd")
-	public DVDModel createUser(@Valid @RequestBody DVDModel dvd) {
+	public DVDModel createDVD(@Valid @RequestBody DVDModel dvd) {
 		return dvdRepo.save(dvd);
 	}
 	
@@ -95,8 +95,7 @@ public class Controller {
 	//rent DVD
 	@PutMapping("/dvd/{dvdId}/{userId}")
 	public DVDModel rentDVD(@PathVariable(value = "dvdId")Long dvdId,
-				            @PathVariable(value = "userId")Long userId, 
-				            @Valid @RequestBody DVDModel rentInfo) 
+				            @PathVariable(value = "userId")Long userId) 
 	{	
 
 		UserModel user = userRepo.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User","id",userId));
@@ -104,7 +103,7 @@ public class Controller {
 		
 		if(dvd.getRental_date() == null) {			
 		    dvd.setRental_date(new Date());
-		    dvd.setRented_by_user(user.getId());			
+		    dvd.setRented_by_user(user);
 		    DVDModel update = dvdRepo.save(dvd);
 		return update;
 		}
@@ -115,7 +114,7 @@ public class Controller {
 	
 	//return DVD
 	@PutMapping("/dvd/{dvdId}")
-	public DVDModel returnDVD(@PathVariable(value = "dvdId")Long dvdId, @Valid @RequestBody DVDModel rentInfo) {		
+	public DVDModel returnDVD(@PathVariable(value = "dvdId")Long dvdId) {		
 		DVDModel dvd = dvdRepo.findById(dvdId).orElseThrow(()-> new ResourceNotFoundException("DVD","id",dvdId));
 		dvd.setRental_date(null);
 		dvd.setRented_by_user(null);			
